@@ -2,7 +2,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: color 0.5s ease-in-out, background-color 1s ease-in-out;
+  transition: color 0.5s ease-in-out, background-color 1s ease-in-out,
+    opacity 1s ease-in-out;
 }
 #root {
   background-color: black;
@@ -20,6 +21,7 @@
   align-items: center;
   flex-direction: column;
   width: 600px;
+  height: 400px;
   box-shadow: 0px 0px 33px -7px rgba(0, 0, 0, 0.75);
   padding: 20px;
   background-color: white;
@@ -35,6 +37,7 @@
   padding: 20px;
   font-size: 1.5rem;
   font-weight: 600;
+  padding-top: 50px;
 }
 
 #text::before,
@@ -46,10 +49,6 @@
   text-align: right;
   padding: 20px;
   font-size: 20px;
-}
-
-#author::before {
-  content: "- ";
 }
 
 .buttons {
@@ -74,14 +73,25 @@
   width: 100px;
   cursor: pointer;
   font-family: "Raleway", sans-serif;
+  margin: 3px;
 }
 
 #tweet-quote {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 20%;
 }
 
 i {
   transform: scale(2);
+}
+
+.fade-in {
+  opacity: 0;
+}
+
+#new-quote {
+  width: 80%;
+  font-size: larger;
 }

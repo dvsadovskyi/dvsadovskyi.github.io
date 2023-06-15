@@ -2,6 +2,7 @@ const App = () => {
   const [quotes, setQuotes] = React.useState("");
   const [randQuote, setRandQuote] = React.useState("");
   const [color, setColor] = React.useState("black")
+  const [isFadingIn, setIsFadingIn] = React.useState(false);
 
   React.useEffect(() => {
     async function getQuotes() {
@@ -14,7 +15,12 @@ const App = () => {
 
     }
     getQuotes();
+
+
   }, [])
+
+
+
 
   let colors = [
     '#16a085',
@@ -31,21 +37,25 @@ const App = () => {
     '#73A857'
   ];
 
-
   function handleClick() {
     let randInd = Math.floor(Math.random() * quotes.length)
-    setRandQuote(quotes[randInd])
-
     let randColorInd = Math.floor(Math.random() * colors.length)
     setColor(colors[randColorInd])
+    setIsFadingIn(true)
+    setTimeout(() => {
+      setIsFadingIn(false);
+      setRandQuote(quotes[randInd]);
+    }, 800)
   }
+
+
 
   return (
     <div style={{ "backgroundColor": color }} className="container" >
       <div id="quote-box">
-        <div style={{ "color": color }} className="content">
-          <p id="text">{randQuote.text}</p>
-          <p id="author">{randQuote.author}</p>
+        <div style={{ "color": color }} className={isFadingIn ? "content fade-in" : "content"}>
+          <p id="text" >{randQuote.text}</p>
+          <p id="author">{randQuote.author ? "- " + randQuote.author : "No author"}</p>
         </div>
         <div className="buttons">
           <button style={{ "backgroundColor": color }} className="button" onClick={handleClick} id="new-quote">Next quote</button>
