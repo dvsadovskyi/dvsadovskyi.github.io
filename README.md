@@ -1,2 +1,1 @@
-# dvsadovskyi.github.io
-# Initital host repo
+# host repo
