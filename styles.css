@@ -1,0 +1,119 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Orbitron", sans-serif;
+  background-color: rgb(13, 13, 13);
+  font-size: 16px;
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.calculator {
+  width: 400px;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.display-container {
+  min-height: 100px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.display-overal {
+  width: 100%;
+  background-color: rgb(26, 26, 26);
+  overflow: visible;
+  word-break: break-all;
+  flex-grow: 1;
+}
+
+#display {
+  width: 100%;
+  background-color: rgb(26, 26, 26);
+  font-size: 2rem;
+  min-height: 30%;
+  flex-grow: 1;
+  word-break: break-all;
+}
+.display-overal,
+#display {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 5px;
+  color: white;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  width: 100%;
+  min-height: 400px;
+  margin-top: 2px;
+}
+
+.buttons div {
+  background-color: rgb(51, 51, 51);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  color: rgb(217, 217, 217);
+  font-size: 1.2rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+.buttons div:active {
+  background-color: rgb(40, 40, 40);
+}
+
+#clear,
+#zero {
+  grid-column: span 2;
+}
+
+#clear,
+#divide,
+#multiply,
+#subtract,
+#add {
+  background-color: rgb(42, 42, 42);
+}
+
+#clear:active,
+#divide:active,
+#multiply:active,
+#subtract:active,
+#add:active {
+  background-color: rgb(30, 30, 30);
+}
+
+#equals {
+  grid-row: span 2;
+  background-color: rgb(115, 115, 115);
+  color: rgb(42, 42, 42);
+}
+
+#equals:active {
+  background-color: rgb(102, 102, 102);
+}
+
+footer {
+  color: white;
+  margin-top: 10px;
+  font-size: 0.8rem;
+}
