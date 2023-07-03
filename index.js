@@ -12,7 +12,7 @@ function App() {
         if (play) {
             timerId = setInterval(() => {
                 setLeftTime(prev => prev - 1)
-            }, 1);
+            }, 1000);
 
             return () => {
                 clearInterval(timerId)
