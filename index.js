@@ -1,138 +1,144 @@
 function App() {
-    const [currDis, setCurrDis] = React.useState(0)
-    const [overDis, setOverDis] = React.useState("")
-    const [result, setResult] = React.useState("");
+    const [breakTime, setBreakTime] = React.useState(5)
+    const [sessionTime, setSessionTime] = React.useState(25)
+    const [play, setPlay] = React.useState(false)
+    const [leftTime, setLeftTime] = React.useState(25 * 60)
+    const [brstart, setBrstart] = React.useState(false)
+    const [countdown, setCountdown] = React.useState(false)
+
+    React.useEffect(() => {
+        let timerId
+
+        if (play) {
+            timerId = setInterval(() => {
+                setLeftTime(prev => prev - 1)
+            }, 1);
+
+            return () => {
+                clearInterval(timerId)
+            }
+        }
+
+    }, [play])
 
 
-    function handleClear() {
-        setCurrDis(0)
-        setOverDis("")
-        setResult("");
-    }
+    React.useEffect(() => {
+        if (leftTime == 0) {
+            let aud = document.getElementById("beep")
+            aud.play()
+            if (brstart) {
+                setBrstart(false)
+                setLeftTime(sessionTime * 60)
 
-    function handleNumber(e) {
-
-
-        if (currDis.length > 12) {
-            setCurrDis(prev => prev)
-        } else {
-            if (currDis === "+" || currDis === "-" || currDis === "*" || currDis === "/" || currDis === 0 || currDis === "0" || result) {
-                setResult("")
-                setCurrDis(e.target.innerText)
-                setOverDis(prev => prev + e.target.innerText)
             } else {
-                setCurrDis(prev => prev + e.target.innerText)
-                setOverDis(prev => prev + e.target.innerText)
+                setBrstart(true)
+                setLeftTime(breakTime * 60)
             }
         }
 
-
-    }
-
-
-    function handleOper(e) {
-
-        if (result) {
-            setOverDis(result)
-            setResult("")
-        }
-
-        let operand = e.target.innerText
-        let lastOp = overDis.slice(-1)
-        let lastTwo = overDis.slice(-2)
-        console.log(lastTwo)
-
-        if (currDis) {
-            setCurrDis(operand)
-            if (lastTwo === "/-" || lastTwo === "*-" || lastTwo === "--" || lastTwo === "+-") {
-                if (operand === "-") {
-                    setOverDis(prev => prev)
-                } else {
-                    setOverDis(prev => {
-                        let buf = prev.slice(0, -2)
-                        return buf + operand
-                    })
-                }
-            } else {
-                if (lastOp === "/" || lastOp === "*" || lastOp === "+" || lastOp === "-") {
-                    if (operand === "-") {
-                        setOverDis(prev => prev + "-")
-                    } else {
-                        setOverDis(prev => {
-                            let buf = prev.slice(0, -1)
-                            return buf + operand
-                        })
-                    }
-
-                } else {
-                    setOverDis(prev => prev + operand)
-                }
-            }
+    }, [leftTime])
 
 
-        }
 
-    }
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+        const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+        return `${formattedMinutes}:${formattedSeconds}`;
+    };
 
-    function handleEquals() {
-        if (overDis) {
-            let result = eval(overDis)
-            setResult(result)
-            setOverDis("")
-            setCurrDis(result)
+    function incBr() {
+        if (breakTime < 60) {
+            setBreakTime(prev => prev + 1)
+        };
+    };
+
+    function decBr() {
+        if (breakTime > 1) {
+            setBreakTime(prev => prev - 1)
+        };
+    };
+
+
+
+    function incSe() {
+        if (sessionTime < 60) {
+            setSessionTime(prev => prev + 1)
+        };
+    };
+
+    function decSe() {
+        if (sessionTime > 1) {
+            setSessionTime(prev => prev - 1)
+        };
+    };
+
+
+    function handlePlay() {
+        if (!countdown) {
+            setLeftTime(sessionTime * 60)
+            setCountdown(true)
         } else {
-            setCurrDis(0)
+            setLeftTime(prev => prev)
         }
-    }
+        setPlay(!play);
+    };
 
-    function handleDec() {
-        if (currDis === "+" || currDis === "-" || currDis === "*" || currDis === "/") {
-            setCurrDis(prev => prev)
-            setOverDis(prev => prev)
-        } else {
-            if (currDis && !result) {
-                if (currDis.includes(".")) {
-                    setCurrDis(prev => prev)
-                    setOverDis(prev => prev)
-                } else {
-                    setCurrDis(prev => prev + ".")
-                    setOverDis(prev => prev + ".")
-                }
-            }
-
-        }
+    function handleReset() {
+        setLeftTime(25 * 60);
+        setBreakTime(5);
+        setSessionTime(25);
+        setPlay(false)
+        setCountdown(false)
+        let file = document.getElementById("beep")
+        file.pause()
+        file.currentTime = 0;
 
     }
 
     return (
         <div className="container">
-            <div className="calculator">
-                <div className="display-container">
-                    <div className="display-overal">{overDis}</div>
-                    <div id="display">{currDis}</div>
+            <div className="clock">
+                <div className="title">25 + 5 Clock</div>
+                <div className="controls">
+                    <div className="break-section">
+                        <div id="break-label">Break Length</div>
+                        <div className="break-adj">
+                            <div onClick={decBr} id="break-decrement"><i className="fas fa-arrow-alt-circle-down fa-lg"></i></div>
+                            <div id="break-length">{breakTime}</div>
+                            <div onClick={incBr} id="break-increment"><i className="fas fa-arrow-alt-circle-up fa-lg"></i></div>
+                        </div>
+                    </div>
+                    <div className="session-section">
+                        <div id="session-label">Session Length</div>
+                        <div className="session-adj">
+                            <div onClick={decSe} id="session-decrement"><i className="fas fa-arrow-alt-circle-down fa-lg"></i></div>
+                            <div id="session-length">{sessionTime}</div>
+                            <div onClick={incSe} id="session-increment"><i className="fas fa-arrow-alt-circle-up fa-lg"></i></div>
+                        </div>
+                    </div>
                 </div>
-                <div className="buttons">
-                    <div onClick={handleClear} id="clear">AC</div>
-                    <div onClick={handleOper} id="divide">/</div>
-                    <div onClick={handleOper} id="multiply">*</div>
-                    <div onClick={handleNumber} id="seven">7</div>
-                    <div onClick={handleNumber} id="eight">8</div>
-                    <div onClick={handleNumber} id="nine">9</div>
-                    <div onClick={handleOper} id="subtract">-</div>
-                    <div onClick={handleNumber} id="four">4</div>
-                    <div onClick={handleNumber} id="five">5</div>
-                    <div onClick={handleNumber} id="six">6</div>
-                    <div onClick={handleOper} id="add">+</div>
-                    <div onClick={handleNumber} id="one">1</div>
-                    <div onClick={handleNumber} id="two">2</div>
-                    <div onClick={handleNumber} id="three">3</div>
-                    <div onClick={handleEquals} id="equals">=</div>
-                    <div onClick={handleNumber} id="zero">0</div>
-                    <div onClick={handleDec} id="decimal">.</div>
+                <div className="timer">
+                    <div id="timer-label">{brstart ? "Break" : "Session"}</div>
+                    <div id="time-left">{formatTime(leftTime)}</div>
                 </div>
+                <div className="start-reset">
+                    <div onClick={handlePlay} id="start_stop">
+                        {play ? <i className="fas fa-pause fa-lg"></i> : <i className="fas fa-play fa-lg"></i>}
+                    </div>
+                    <div onClick={handleReset} id="reset">
+                        <i className="fas fa-redo fa-lg"></i>
+                    </div>
+                    <audio preload="auto" id="beep" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"></audio>
+                </div>
+                <footer>
+                    <p id="footer-title">Designed and Coded by</p>
+                    <p id="author">dvsadovskyi</p>
+                </footer>
             </div>
-            <footer>by dvsadovskyi</footer>
         </div>
+
     )
 }
 
